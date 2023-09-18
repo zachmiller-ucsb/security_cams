@@ -8,7 +8,8 @@ db = SQLAlchemy()
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'hfefheifhewufhjwkf'
-    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///users.db"
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sql3'
+    app.config['SQLALCHEMY_BINDS'] = {'motion' : 'sqlite:///motion.sql3'}
     db.init_app(app)
 
     from .views import views
