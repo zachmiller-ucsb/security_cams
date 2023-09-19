@@ -1,3 +1,88 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 {% block title %}Home{% endblock %}
-{% block content %}<h1>This is the home page</h1>{% endblock %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Timeline</title>
+    <script type="text/javascript"
+        src="https://unpkg.com/vis-timeline@latest/standalone/umd/vis-timeline-graph2d.min.js"></script>
+    <link href="https://unpkg.com/vis-timeline@latest/styles/vis-timeline-graph2d.min.css" rel="stylesheet"
+        type="text/css" />
+    <style type="text/css">
+        #visualization {
+            width: 100%;
+            height: 400px;
+            border: 1px solid lightgray;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="visualization"></div>
+    <script type="text/javascript">
+        var count = 1000;
+        var groups = new vis.DataSet([
+            { id: 1, content: "Truck&nbsp;1" },
+            { id: 2, content: "Truck&nbsp;2" },
+            { id: 3, content: "Truck&nbsp;3" },
+            { id: 4, content: "Truck&nbsp;4" },
+        ]);
+
+        // create items
+        var items = new vis.DataSet();
+
+        var order = 1;
+        var truck = 1;
+        for (var j = 0; j < 4; j++) {
+            var date = new Date();
+            for (var i = 0; i < count / 4; i++) {
+                date.setHours(date.getHours() + 4 * (Math.random() < 0.2));
+                var start = new Date(date);
+
+                date.setHours(date.getHours() + 2 + Math.floor(Math.random() * 4));
+                var end = new Date(date);
+
+                items.add({
+                    id: order,
+                    group: truck,
+                    start: start,
+                    end: end,
+                    content: "Order " + order,
+                });
+
+                order++;
+            }
+            truck++;
+        }
+
+        // specify options
+        var options = {
+            stack: false,
+            start: new Date(),
+            end: new Date(1000 * 60 * 60 * 24 + new Date().valueOf()),
+            editable: true,
+            margin: {
+                item: 10, // minimal margin between items
+                axis: 5, // minimal margin between items and the axis
+            },
+            orientation: "top",
+        };
+
+        // create a Timeline
+        var container = document.getElementById("visualization");
+        timeline = new vis.Timeline(container, null, options);
+        timeline.setGroups(groups);
+        timeline.setItems(items);
+
+        document.getElementById("count").innerHTML = count;
+
+        window.addEventListener("resize", () => {
+            /*timeline.checkResize();*/
+        });
+    </script>
+</body>
+
+</html>
+{% endblock %}
