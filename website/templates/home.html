@@ -17,8 +17,9 @@
             border: 0;
 
         }
+
         video {
-            margin-top : 20 px;
+            margin-top: 20 px;
             width: 100% !important;
             height: auto !important;
         }
@@ -34,7 +35,7 @@
     {% for (filename, camera_id, startat, endat) in data %}
     <script>
         items.add({
-            id: "{{ filename }}",
+            id: "{{ filename }}".replace(/^.*[\\\/]/, '').replaceAll("raw", "video"),
             group: parseInt("{{ camera_id }}"),
             start: new Date("{{ startat }}".replaceAll(' ', "T")),
             end: new Date("{{ endat }}".replaceAll(' ', "T")),
@@ -72,12 +73,32 @@
         window.addEventListener("resize", () => {
             // timeline.checkResize();
         });
+
+        timeline.on("click", function (properties) {
+            if (properties.item) {
+                console.log(properties.item)
+                fetch("/generate_url", {
+                    method: "POST",
+                    body: JSON.stringify({ filename: properties.item }),
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        var videoSource = document.getElementById("video-source");
+                        videoSource.src = data.url;
+                        var video = document.querySelector('video');
+                        video.load();
+                    });
+            }
+        });
+
     </script>
 
     <div id="video">
         <video controls>
-            <source src="{{ url_for('views.download_file', filename='video-10-20230909-194945.mp4') }}"
-                type="video/mp4">
+            <source id="video-source" type="video/mp4">
         </video>
     </div>
 </body>
