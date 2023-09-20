@@ -23,6 +23,20 @@
             width: 100% !important;
             height: auto !important;
         }
+
+        .video-card {
+            width: 50%;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+
+        #video-container {
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
     </style>
 </head>
 
@@ -86,21 +100,40 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        var videoSource = document.getElementById("video-source");
+                        var videoSource = document.getElementById(`video-source-${properties.group}`);
                         videoSource.src = data.url;
-                        var video = document.querySelector('video');
-                        video.load();
+                        var video = document.getElementById(`video-${properties.group}`);
+                        video.load()
                     });
             }
         });
 
     </script>
 
-    <div id="video">
-        <video controls>
-            <source id="video-source" type="video/mp4">
-        </video>
-    </div>
+    <div id="video-container"></div>
+    <script>
+        const videoContainer = document.getElementById("video-container");
+
+        groupsList.forEach(g => {
+            const video = document.createElement("video");
+            video.id = `video-${g}`
+            video.controls = true;
+
+            const source = document.createElement("source");
+            source.id = `video-source-${g}`
+            source.type = "video/mp4";
+
+            video.appendChild(source);
+
+            const videoDiv = document.createElement("div");
+            videoDiv.classList.add("video-card");
+
+            videoDiv.appendChild(video);
+
+            videoContainer.appendChild(videoDiv);
+        });
+    </script>
+
 </body>
 
 </html>
