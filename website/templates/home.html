@@ -11,18 +11,22 @@
     <link href="https://unpkg.com/vis-timeline@latest/styles/vis-timeline-graph2d.min.css" rel="stylesheet"
         type="text/css" />
     <style type="text/css">
-        #visualization {
+        #timeline {
             margin-top: 20px;
             width: 100%;
-            height: 600px;
             border: 0;
-            /* 1px solid #d3d3d3 ; */
+
+        }
+        video {
+            margin-top : 20 px;
+            width: 100% !important;
+            height: auto !important;
         }
     </style>
 </head>
 
 <body>
-    <div id="visualization"></div>
+    <div id="timeline"></div>
     <script>
         var items = new vis.DataSet();
         var groupsSet = new Set();
@@ -60,9 +64,8 @@
             orientation: "top",
         };
 
-        var container = document.getElementById("visualization");
+        var container = document.getElementById("timeline");
         timeline = new vis.Timeline(container, null, options);
-        console.log(items)
         timeline.setGroups(groups);
         timeline.setItems(items);
 
@@ -70,6 +73,13 @@
             // timeline.checkResize();
         });
     </script>
+
+    <div id="video">
+        <video controls>
+            <source src="{{ url_for('views.download_file', filename='video-10-20230909-194945.mp4') }}"
+                type="video/mp4">
+        </video>
+    </div>
 </body>
 
 </html>
